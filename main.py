@@ -20,7 +20,7 @@ app.include_router(email_router)
 # CORS
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=["http://localhost:5173","https://dohuth82078vb.cloudfront.net/","http://leadmanagementpccg.s3-website-us-east-1.amazonaws.com"],  # 👈 Frontend dev origin     >
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -43,10 +43,10 @@ class Lead(BaseModel):
     status: str
     source: str
 
-@app.post("/upload-document")
-async def upload_doc(file: UploadFile = File(...)):
-    name, email = await extract_from_file(file)
-    lead = create_lead(name, email, "N/A", "New", "Document")
+@app.post("/api/extract-lead")
+async def extract_lead(file: UploadFile = File(...)):
+    name, email, phone = await extract_from_file(file)
+    lead = create_lead(name, email, phone, "New", "Document")
     return lead
 
 @app.post("/create-lead")
